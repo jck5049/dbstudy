@@ -11,7 +11,7 @@
 /*
     오라클의 데이터 타입
     1. CHAR(size)    : 고정 길이 문자 타입(size : 1 ~ 2000바이트)
-    2. VARCHAR(size) : 가변 길이 문자 타입(size : 1 ~ 4000바이트)
+    2. VARCHAR2(size) : 가변 길이 문자 타입(size : 1 ~ 4000바이트)
     3. DATE          : 날짜/시간 타입
     4. TIMESTAMP     : 날짜/시간 타입(좀 더 정밀)
     5. NUMBER(p,s)   : 정밀도(p), 스케일(s)로 표현하는 숫자 타입
@@ -24,6 +24,33 @@
             (4) NUMBER(2,2) : 1 미만의 소수부 2자리인 실수(0.15) - 정수부의 0은 유효 자리가 아님. 포함안함.
             
 */
+
+/*
+    제약조건(Constraint)    5개 중 3개 나머지 2개는 추후 배울예정.
+    1. 널
+        1) NULL 또는 생략
+        2) NOT NULL (널이 아니다. 널 말고 다른 값이 있어야 한다.^^) (널(NULL) 값을 가질 수 없음)
+    2. 중복 데이터 방지
+        UNIQUE
+    3. 값의 제한
+        CHECK
+    4. 기본키(데이터 무결성)(개체 무결성)
+        PK(Primary Key)
+         1) NOT NULL + UNIQUE
+    5. 외래키(Foreign Key)(참조 무결성)
+        FK : 참조하는 값만 가질수 있다.
+*/
+
+-- 예시 테이블
+DROP TABLE PRODUCT;
+CREATE TABLE PRODUCT(
+    CODE            VARCHAR2(2 BYTE)    NOT NULL UNIQUE, 
+    MODEL           VARCHAR2(10 BYTE)   NULL,
+    CATEGORY        VARCHAR2(5 BYTE)    CHECK(CATEGORY = 'MAIN'OR CATEGORY = 'SUB'), -- CHECK(CATEGORY IN('MAIN', 'SUB')) 이 문법을 사용해야함( IN )
+    PRICE           NUMBER              CHECK(PRICE >= 0),
+    AMOUNT          NUMBER(2)           CHECK(AMOUNT >= 0 AND AMOUNT <= 100),        -- CHECK(AMOUNT BETWEEN 0 AND 100)  0, 100을 포함한다 (BETWEEN)
+    MANUFACTURED    DATE
+);
 
 
 
