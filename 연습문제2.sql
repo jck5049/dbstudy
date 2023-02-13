@@ -5,6 +5,18 @@
 --    (2) BOOK_NAME : 책이름, 가변 길이 문자 (최대 100 BYTE)
 --    (3) PUBLISHER : 출판사, 가변 길이 문자 (최대 50 BYTE)
 --    (4) PRICE : 가격, 숫자 (최대 6자리)
+CREATE TABLE BOOK_TBL (
+    BOOK_ID         NUMBER(11)          NOT NULL,
+    BOOK_NAME       VARCHAR2(100 BYTE),
+    PUBLISHER       VARCHAR2(50 BYTE),
+    PRICE           NUMBER(6)
+);
+    
+
+
+
+
+
 
 -- 2) CUSTOMER_TBL 테이블
 --    (1) CUSTOMER_ID : 고객번호, 숫자 (최대 11자리), 필수
