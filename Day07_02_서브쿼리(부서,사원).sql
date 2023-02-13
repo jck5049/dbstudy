@@ -5,12 +5,14 @@
     3. 하위쿼리가 항상 메인쿼리보다 먼저 실행된다.
 */
 
+
 /*
     서브쿼리가 포함되는 위치
     1. SELECT절 : 스칼라 서브커리
     2. FROM절   : 인라인 뷰
     3. WHERE절  : 서브쿼리
 */
+
 
 /*
     서브쿼리의 실행 결과에 의한 구분
@@ -29,6 +31,9 @@
 */
 
 
+
+
+/* WHERE절의 서브쿼리 */
 /* WHERE절의 서브쿼리 */
 
 -- 1. 사원번호가 1001인 사원과 동일한 직급(POSITION)을 가진 사원을 조회하시오.
@@ -166,19 +171,6 @@ SELECT EMP_NO, DEPART, NAME, POSITION, GENDER, HIRE_DATE, SALARY
 
 
 
-
-/* SELECT절의 서브쿼리 */
-
-
-
-
-
-
-
-
-
-
-
 /*
     인라인 뷰(Inline View)
     1. 쿼리문에 포함된 뷰(가상 테이블)이다.
@@ -245,13 +237,75 @@ SELECT E.EMP_NO, E.NAME
 
 
 /* FROM절의 서브쿼리 */
+/* FROM절의 서브쿼리 */
 
-SELECT E.EMP_NO, E.NAME, E.DEPART
-  FROM (SELECT EMP_NO, NAME, DEPART
-            FROM EMPLOYEE_TBL
-            ORDER BY EMP_NO) E
+-- 1. 연봉이 2번째로 높은 사원을 조회하시오.
+--      1) 연봉순으로 정렬한다.
+--      2) 정렬 결과에 행 번호(ROWNUM)을 붙인다.
+--      3) 원하는 행 번호를 조회한다.
+
+-- 1) ROWNUM 칼럼 사용하기
+SELECT E.EMP_NO, E.DEPART, E.NAME, E.POSITION, E.GENDER, E.HIRE_DATE, E.SALARY
+  FROM (SELECT ROWNUM AS RN, A.EMP_NO, A.DEPART, A.NAME, A.POSITION, A.GENDER, A.HIRE_DATE, SALARY
+            FROM (SELECT EMP_NO, DEPART, NAME, POSITION, GENDER, HIRE_DATE, SALARY
+                    FROM EMPLOYEE_TBL
+                   ORDER BY SALARY DESC) A) E
+ WHERE E.RN = 2;
+
+
+
+-- 2) ROW_NUMBER() 함수 사용하기
+SELECT E.EMP_NO, E.DEPART, E.NAME, E.POSITION, E.GENDER, E.HIRE_DATE, E.SALARY
+  FROM (SELECT ROW_NUMBER() OVER(ORDER BY SALARY DESC) AS RN, EMP_NO, DEPART, NAME, POSITION, GENDER, HIRE_DATE, SALARY
+            FROM EMPLOYEE_TBL) E
+ WHERE E.RN = 2;
 
 
 
 
+-- 2. 3 ~ 4번째로 입사한 사원을 조회하시오.
 
+-- 1) ROWNUM 칼럼 사용하기
+SELECT E.EMP_NO, E.DEPART, E.NAME, E.POSITION, E.GENDER, E.HIRE_DATE, E.SALARY
+  FROM (SELECT ROWNUM AS RN, A.EMP_NO, A.DEPART, A.NAME, A.POSITION, A.GENDER, A.HIRE_DATE, SALARY
+            FROM (SELECT EMP_NO, DEPART, NAME, POSITION, GENDER, HIRE_DATE, SALARY
+                    FROM EMPLOYEE_TBL
+                   ORDER BY HIRE_DATE ASC) A) E
+ WHERE E.RN BETWEEN 3 AND 4;
+
+
+-- 2) ROW_NUMBER() 함수 사용하기
+SELECT E.EMP_NO, E.DEPART, E.NAME, E.POSITION, E.GENDER, E.HIRE_DATE, E.SALARY
+  FROM (SELECT ROW_NUMBER() OVER(ORDER BY HIRE_DATE ASC) AS RN, EMP_NO, DEPART, NAME, POSITION, GENDER, HIRE_DATE, SALARY
+            FROM EMPLOYEE_TBL) E
+ WHERE E.RN IN(3, 4);
+
+
+
+
+/* SELECT절의 서브쿼리 */
+/* SELECT절의 서브쿼리 */
+/*
+    스칼라 서브쿼리
+    1. SELECT절에서 하나의 값을 반환하는 서브쿼리이다.
+    2. 일치하지 않는 정보는 NULL값을 반환한다.
+    3. 유사한 방식의 조인 방식은 외부조인이다.
+*/
+
+-- 부서번호가 1인 부서에 근무하는 사원번호, 사원명, 부서번호, 부서명을 조회하시오.
+SELECT
+       E.EMP_NO
+     , E.NAME
+     , E.DEPART
+     , (SELECT D.DEPT_NAME
+          FROM DEPARTMENT_TBL D
+         WHERE D.DEPT_NO = E.DEPART
+           AND D.DEPT_NO = 1)
+  FROM
+       EMPLOYEE_TBL E;
+
+
+-- 참고. 조인으로 풀어보기
+SELECT E.EMP_NO, E.NAME, E.DEPART, D.DEPT_NAME
+  FROM DEPARTMENT_TBL D RIGHT OUTER JOIN EMPLOYEE_TBL E
+    ON D.DEPT_NO = E.DEPART AND DEPT_NO = 1;
