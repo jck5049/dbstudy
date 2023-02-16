@@ -77,13 +77,25 @@ SELECT EMPLOYEE_ID, FIRST_NAME, LAST_NAME, EMAIL, PHONE_NUMBER, HIRE_DATE, JOB_I
 
 -- 14. EMPLOYEES 테이블에서 PHONE_NUMBER에 따른 지역(REGION)을 조회하시오.
 -- PHONE_NUMBER가 011로 시작하면 'MOBILE', 515로 시작하면 'EAST', 590으로 시작하면 'WEST', 603으로 시작하면 'SOUTH', 650으로 시작하면 'NORTH'로 조회하시오.
-SELECT EMPLOYEE_ID, FIRST_NAME, LAST_NAME, EMAIL, PHONE_NUMBER AS 번호, HIRE_DATE, JOB_ID, SALARY, COMMISSION_PCT, MANAGER_ID, DEPARTMENT_ID 
-  FROM EMPLOYEES
- WHERE PHONE_NUMBER LIKE '011%'
+SELECT EMPLOYEE_ID, FIRST_NAME, LAST_NAME, EMAIL, HIRE_DATE, JOB_ID, SALARY, COMMISSION_PCT, MANAGER_ID, DEPARTMENT_ID,
+    DECODE(SUBSTR(PHONE_NUMBER, 1, 3),  011, 'MOBILE', 
+                                        515, 'EAST',
+                                        590, 'WEST',
+                                        603, 'SOUTH',
+                                        650, 'NORTH') AS 번호
+  FROM EMPLOYEES;
 
 
 
 -- 15. EMPLOYEES 테이블에서 근무 개월 수가 240개월 이상이면 '퇴직금정산대상', 아니면 빈 문자열('')을 조회하시오.
+SELECT EMPLOYEE_ID, FIRST_NAME, LAST_NAME, EMAIL, PHONE_NUMBER, SALARY , HIRE_DATE
+            , CASE
+                    WHEN FLOOR(MONTHS_BETWEEN(SYSDATE, HIRE_DATE)) >= 240 THEN '퇴직금정산대상'
+                    ELSE ' '
+                    END
+  FROM EMPLOYEES;
+
+
 
 
 

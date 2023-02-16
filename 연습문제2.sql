@@ -1,4 +1,9 @@
 -- 1. 다음 설명을 읽고 적절한 테이블을 생성하되, 기본키/외래키는 별도로 설정하지 마시오.
+DROP TABLE ORDER_TBL;
+DROP TABLE CUSTOMER_TBL;
+DROP TABLE BOOK_TBL;
+
+
 
 -- 1) BOOK_TBL 테이블
 --    (1) BOOK_ID : 책번호, 숫자 (최대 11자리), 필수
@@ -14,15 +19,19 @@ CREATE TABLE BOOK_TBL (
     
 
 
-
-
-
-
 -- 2) CUSTOMER_TBL 테이블
 --    (1) CUSTOMER_ID : 고객번호, 숫자 (최대 11자리), 필수
 --    (2) CUSTOMER_NAME : 고객명, 가변 길이 문자 (최대 20 BYTE)
 --    (3) ADDRESS : 주소, 가변 길이 문자 (최대 50 BYTE)
 --    (4) PHONE : 전화, 가변 길이 문자 (최대 20 BYTE)
+CREATE TABLE CUSTOMER_TBL(
+    CUSTOMER_ID     NUMBER(11)         NOT NULL,
+    CUSTOMER_NAME   VARCHAR2(20 BYTE),
+    ADDRESS         VARCHAR2(50 BYTE),
+    PHONE           VARCHAR2(20 BYTE)
+);
+
+
 
 -- 3) ORDER_TBL 테이블
 --    (1) ORDER_ID : 주문번호, 가변 길이 문자 (최대 20 바이트), 필수
@@ -30,6 +39,17 @@ CREATE TABLE BOOK_TBL (
 --    (3) BOOK_ID : 책번호, 숫자 (최대 11자리)
 --    (4) AMOUNT : 판매수량, 숫자 (최대 2자리)
 --    (5) ORDER_DATE : 주문일, 날짜
+CREATE TABLE ORDER_TBL (
+    ORDER_ID        VARCHAR2(20 BYTE)       NOT NULL,
+    CUSTOMER_ID     NUMBER(11),
+    BOOK_ID         NUMBER(11),
+    AMOUNT          NUMBER(2),
+    ORDER_DATE      DATE
+);
+
+
+
+
 
 
 -- 2. 1부터 1씩 증가하는 값을 생성하는 BOOK_SEQ 시퀀스를 생성한 뒤, BOOK_SEQ를 이용하여 BOOK_TBL 테이블에 INSERT를 수행하시오.
@@ -46,6 +66,25 @@ CREATE TABLE BOOK_TBL (
 9       올림픽 이야기    삼성당      7500
 10      올림픽 챔피언    나이스북    13000
 */
+DROP SEQUENCE BOOK_SEQ;     -- 시퀀스 삭제
+
+CREATE SEQUENCE BOOK_SEQ NOCACHE;   -- 시퀀스 생성
+
+INSERT INTO BOOK_TBL(BOOK_ID, BOOK_NAME, PUBLISHER, PRICE) VALUES(BOOK_SEQ.NEXTVAL, '축구의 역사', '굿스포츠', 7000);
+INSERT INTO BOOK_TBL(BOOK_ID, BOOK_NAME, PUBLISHER, PRICE) VALUES(BOOK_SEQ.NEXTVAL, '축구 아는 여자', '나이스북', 13000);
+INSERT INTO BOOK_TBL(BOOK_ID, BOOK_NAME, PUBLISHER, PRICE) VALUES(BOOK_SEQ.NEXTVAL, '축구의 이해', '대한미디어', 22000);
+INSERT INTO BOOK_TBL(BOOK_ID, BOOK_NAME, PUBLISHER, PRICE) VALUES(BOOK_SEQ.NEXTVAL, '골프 바이블', '대한미디어', 35000);
+INSERT INTO BOOK_TBL(BOOK_ID, BOOK_NAME, PUBLISHER, PRICE) VALUES(BOOK_SEQ.NEXTVAL, '피겨 교본', '굿스포츠', 6000);
+INSERT INTO BOOK_TBL(BOOK_ID, BOOK_NAME, PUBLISHER, PRICE) VALUES(BOOK_SEQ.NEXTVAL, '역도 단계별 기술', '굿스포츠', 6000);
+INSERT INTO BOOK_TBL(BOOK_ID, BOOK_NAME, PUBLISHER, PRICE) VALUES(BOOK_SEQ.NEXTVAL, '야구의 추억', '이상미디어', 20000);
+INSERT INTO BOOK_TBL(BOOK_ID, BOOK_NAME, PUBLISHER, PRICE) VALUES(BOOK_SEQ.NEXTVAL, '야구를 부탁해', '이상미디어', 13000);
+INSERT INTO BOOK_TBL(BOOK_ID, BOOK_NAME, PUBLISHER, PRICE) VALUES(BOOK_SEQ.NEXTVAL, '올림픽 이야기', '삼성당', 7500);
+INSERT INTO BOOK_TBL(BOOK_ID, BOOK_NAME, PUBLISHER, PRICE) VALUES(BOOK_SEQ.NEXTVAL, '올림픽 챔피언', '나이스북', 13000);
+COMMIT;
+
+
+
+
 
 
 -- 3. 1000부터 1씩 증가하는 값을 생성하는 CUSTOMER_SEQ 시퀀스를 생성한 뒤, CUSTOMER_SEQ를 이용하여 INSERT를 수행하시오.
