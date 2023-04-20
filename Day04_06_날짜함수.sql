@@ -40,7 +40,7 @@ SELECT
         
 -- 5. 경과한 개월 수 구하기
 SELECT
-        MONTHS_BETWEEN(SYSDATE, TO_DATE('22/10/07', 'YY/MM/DD'))
+        MONTHS_BETWEEN(SYSDATE, TO_DATE('22/10/07', 'YY/MM/DD'))    -- (SYSDATE, 머머머)는 (SYSDATE - 머머머)로 계산한다.
     FROM
         DUAL;
 

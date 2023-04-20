@@ -1,0 +1,15 @@
+-- 삽입/삭제/수정하면 메시지를 출력하는 트리거 만들기
+
+SET SERVEROUTPUT ON;    -- 이걸 처음에 사용해야 메시지를 출력할 수 있다. (필수)
+
+CREATE OR REPLACE TRIGGER MY_TRIGGER
+    AFTER
+    INSERT OR DELETE OR UPDATE
+    ON DEPARTMENT_TBL
+    FOR EACH ROW
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('하하하하하');
+END;
+
+INSERT INTO DEPARTMENT_TBL(DEPT_NO, DEPT_NAME, LOCATION) VALUES(5, '개발부', '서울');
+    
